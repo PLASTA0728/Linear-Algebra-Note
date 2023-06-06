@@ -1,0 +1,889 @@
+\documentclass{package/notes}
+
+%%%%%%%%%% Default Package %%%%%%%%%%%%%
+\usepackage{package/color-env}
+%%%%%%%%%% %%%%%%%%%%%%%%% %%%%%%%%%%%%%
+
+%%%%%%%%%% Required Packages %%%%%%%%%%%%%
+\usepackage{background}
+\usepackage[object=vectorian]{pgfornament} %% used in title.tex
+\usepackage{calligra} %%% (optional) to make the Title text beautiful 
+
+%%%%%% Optional Packages %%%%%%%
+\usepackage{lettrine} %% for nice looking 
+\usepackage{GoudyIn} %% first Letter of the paragraph
+%%%%%%%%%%%%%%%%%%%%%%%%
+
+\usepackage{lipsum}  %% for dummy text 
+\usepackage{amssymb,amsmath,amsfonts}  %%% for maths
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\renewcommand{\LettrineFontHook}{\color{black}\GoudyInfamily{}}
+\LettrineTextFont{\itshape}
+\setcounter{DefaultLines}{3}%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%% Bibliography %%%%%%%%%
+% Required packages are included in notes class
+% Can be tweaked in the notes.cls file itself
+
+\addbibresource{resource/references.bib}
+
+\begin{document}
+
+\begin{titlepage}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% Inspired From  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+%%%%  https://www.reddit.com/r/LaTeX/comments/j9d739/hello_world_in_latex_is_a_lot_cooler/   %%%%%
+%%%%%%%%%%%%%%%% If this doesn't look nice then you may remove it %%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\backgroundsetup{
+scale=1,
+opacity=1,
+angle=0,
+color=black,
+contents={
+\begin{tikzpicture}[color=black, every node/.style={inner sep= 15pt}]
+\node (NW) [anchor=north west] at (current page.north west){\pgfornament[width=2.5cm] {131}};
+\node (NE) [anchor=north east] at (current page.north east){\pgfornament[width=2.5cm, symmetry=v]{131}};
+\node (SW) [anchor=south west] at (current page.south west){\pgfornament[width=2.5cm, symmetry=h]{131}};
+\node (SE) [anchor=south east] at (current page.south east){\pgfornament[width=2.5cm, symmetry=c]{131}};
+\foreach \i in {-4,0,4}
+\node[anchor=north,xshift=\i cm] at (current page.north){\pgfornament[scale=0.25,symmetry=v]{71}};
+\foreach \i in {-4,0,4}
+\node[xshift=\i cm, yshift=32.25 pt] at (current page.south){\pgfornament[scale=0.25,symmetry=v]{71}};
+\foreach \i in {-8,-4,0,4,8}
+\node[yshift=\i cm, xshift=32.25pt, rotate=90] at (current page.west){\pgfornament[scale=0.25,symmetry=v]{71}};
+\foreach \i in {-8,-4,0,4,8}
+\node[yshift=\i cm, xshift=-32.25pt, rotate=90] at (current page.east){\pgfornament[scale=0.25,symmetry=v]{71}};
+\foreach \i in {-11,-9,...,7,9}
+\node[anchor=west, yshift=\i cm, xshift=52.25pt, rotate=90] at (current page.west){\pgfornament[scale=0.1]{80}};
+\foreach \i in {-11,-9,...,7,9}
+\node[anchor=east, yshift=\i cm, xshift=-52.25pt, rotate=-90] at (current page.east){\pgfornament[scale=0.1]{80}};
+\end{tikzpicture}
+}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\centering % Centre everything on the title page
+		
+\scshape % Use small caps for all text on the title page
+
+\vspace*{\baselineskip} % White space at the top of the page
+
+%------------------------------------------------
+%	Title
+%------------------------------------------------
+
+\rule{\textwidth}{1.6pt}\vspace*{-\baselineskip}\vspace*{2pt} % Thick horizontal rule
+\rule{\textwidth}{0.4pt} % Thin horizontal rule
+
+\vspace{0.75\baselineskip} % Whitespace above the title
+{\huge \calligra{ Linear Algebra Note }\\} % Title
+
+\vspace{0.75\baselineskip} % Whitespace below the title
+
+\rule{\textwidth}{0.4pt}\vspace*{-\baselineskip}\vspace{3.2pt} % Thin horizontal rule
+\rule{\textwidth}{1.6pt} % Thick horizontal rule
+
+\vspace{2\baselineskip} % Whitespace after the title block
+
+%------------------------------------------------
+%	Subtitle
+%------------------------------------------------
+
+\LARGE{ Linear Algebra Math 355.1x} 
+
+\vspace*{3\baselineskip} % Whitespace under the subtitle
+
+
+
+\vspace{0.5\baselineskip} 
+
+{\scshape   \LARGE Doctor. Steve Wang\\ } % Editor list
+
+\vspace{0.2\baselineskip} 
+
+\textit{\Large Rice University} 
+
+\vfill 
+
+%------------------------------------------------
+% Author
+%------------------------------------------------
+
+\begin{figure}[!h]
+    \centering
+    \includegraphics[width = 3cm]{Rice University Logo.png}%% include the university icon here
+\end{figure}
+\vspace{0.3\baselineskip} 
+
+
+{\large Edited by\\  Steph Yao}
+\end{titlepage}
+
+\newpage
+
+\backgroundsetup{contents={}} %% to remove background and watermark from other pages
+\tableofcontents
+
+%\newpage
+
+\chapter{Vectors and Matrix}
+
+\section{System of Linear Equation}
+
+A matrix is a rectangular array of numbers like 
+
+\begin{align*}       
+\left[               
+  \begin{array}{ccc}   
+    a_{11} & a_{12} & a_{13}\\  
+    a_{21} & a_{22} & a_{23}\\  
+  \end{array}
+\right]               
+\end{align*}
+
+and it stands for 
+\begin{align*}      
+\left[                
+  \begin{array}{ccc}  
+    a_{11}x_1+a_{12}x_2 & =a_{13}\\  
+    a_{21}x_1 +a_{22}x_2 & =a_{23}\\  
+  \end{array}
+\right]                
+\end{align*}
+
+There are three types of elementary row operations that one can apply to a matrix.
+
+\begin{itemize}
+    \item Switch two rows.
+    \item Multiply a row by a non-zero scalar.
+    \item Add a scalar multiple of one row to another row. (More precisely, replace one row with the sum of itself and a scalar multiple of a different row.)
+\end{itemize}
+
+
+\begin{definition}[Row-Equivalent]
+
+If one can obtain augmented matrix $B$ from augmented matrix $A$  via a series of elementary row operations, we say that $A$ and $B$ are \textbf{row-equivalent}.
+\end{definition}
+
+
+If $A$ and $B$ are row-equivalent, the system of linear equations represented by $A$ and the system of linear equations represented by $B$ have the same set of solutions.
+
+\section{Row-Reduced Form}
+\subsection{Row-Reduced Echelon Form (RREF)}
+
+What's the goal of manipulation when we stop doing the row operations?
+
+When a matrix is in RREF.
+
+The rule to determine when a matrix is in RREF:
+
+
+\begin{enumerate}
+    \item Any rows of all 0’s has to be at the bottom
+    \item In any non-zero row, the first non-zero entry is 1. (This is called a \textbf{pivot}.
+    \item Each pivot is the only non-zero entry in its column.
+    \item Any pivot in a lower row is to the right of any pivot in a higher row.
+\end{enumerate}
+
+\begin{definition}[Pivot]
+
+    If a matrix is in row-echelon form, then the first nonzero entry of each row is called a \textbf{pivot}.
+\end{definition}
+
+\begin{problem}
+    Determine whether this matrix is in RREF:
+\begin{align*}       
+\left[              
+\begin{array}{cccccc}   
+1 & 0 & 0 & 0 & 4 & 3\\
+0 & 0 & 1 & 0 & 1 & 0\\
+0 & 0 & 0 & 1 & -2 & 1
+\end{array}
+\right]            
+\end{align*}
+
+\end{problem}
+
+\begin{proof}[Answer]
+Yes. Notice that the second "1" in the second row is not a pivot so it's okay.
+\end{proof}
+
+\subsection{Row-Reduction Algorithm}
+Using the \textbf{Gaussian elimination:}
+
+\begin{definition}[Gaussian elimination]{Def: gaussian elimination}
+    \begin{enumerate}
+    \item Swap rows to get the left-most remaining non-zero entry to the topmost remaining row.
+    \item Scale that row to make its leading entry a 1.
+    \item Clear all non-zero entries in the column of that pivot (both above and below the pivot) by adding/subtracting multiples of that row to/from other rows.
+    \item With that pivot now set, repeat the procedure with the remaining rows.
+\end{enumerate}
+\end{definition}
+
+
+Here is an example matrix:
+\begin{align*}       
+\left[               
+\begin{array}{ccccc}   
+-2 & -2 & -2 & 0 & -8\\
+1 & 1 & 1 & -1 & 0 \\
+0 & 1 & 2 & 0 & 1\\
+2& 1&0&2&12
+\end{array}
+\right]              
+\rightarrow
+\left[            
+\begin{array}{ccccc}   
+\boxed{1} & 0 & -1 & 0 & 3\\
+0 & \boxed{1} & 2 & 0 & 1 \\
+0 & 0 & 0 & \boxed{1} & 4\\
+0& 0&0&0&-3
+\end{array}
+\right]
+\end{align*}
+The boxed ones $\boxed{1}$ are pivots.
+\subsection{Interpretations}
+\begin{definition}[Free variables]
+    
+     A variable is a basic variable if it corresponds to a pivot column. Otherwise, the variable is known as a \textbf{free variable}. For a free variable, the columns that have no pivots and the variable can be any number. 
+\end{definition}
+
+
+The matrix is inconsisted when the matrix appeared to be \{0,0,0,\dots,a\} (a$\neq$ 0)
+
+If a matrix $M$ has $m$ rows and $n$ columns, we say that $M$ is an $m\times n$ matrix. For instance,
+\begin{align*}
+    \left[         
+\begin{array}{ccccc}   
+1 & 0 & 0 & 1 & -2\\
+0 & 0 & 1 & 3 & 3 \\
+0 & 0 & 0 & 0 & 0
+\end{array}
+\right]
+\end{align*}
+is a $3\times 5$ augmented matrix, since it has 3 rows and 5 columns. The coefficient matrix of the above system would be a $3\times 4$ matrix.
+
+\subsection{Fields}
+\paragraph{Real Numbers:}
+If a matrix has real number entries, will the entries stay real numbers when you row-reduce it? Yes.
+
+\paragraph{Rational Numbers:}
+If a matrix has rational number entries, will the entries stay rational numbers when you row-reduce it? (Recall that rational numbers are those that can be written as fractions $\dfrac{p}{q}$, where $p,q$ are integers.) Yes.
+
+\paragraph{Integers:}
+If a matrix has integer entries, will the entries stay integers when you row-reduce it? Not necessarily.
+
+A \textbf{field} is, essentially, a set in which one can add, subtract, multiply, and divide any two elements (other than dividing by zero). The formal definition is below.
+
+The field that we will most commonly use in Linear Algebra is the set of real numbers $\mathbb{R}$ . Other fields include the set of complex numbers $\mathbb{C}$, the set of rational numbers $\mathbb{Q}$, and the integers modulo a prime $p$.
+
+\begin{definition}[Formal Definition of a Field]
+
+A field is a set $F$ together with binary operations $+,\cdot$ on $F$ which satisfy the following conditions:
+
+\begin{itemize}
+    \item Addition is associative and commutative; that is, for all $a,b,c\in F$, we have $a+(b+c)=(a+b)+c$ and $a+b=b+a$.
+    \item There is an element $0\in F$ such that $a+0=a$ for all $a\in F$.
+    \item For every $a\in F$, there is an element $-a\in F$ such that $-a+a=0$.
+    \item Multiplication is associative and commutative; that is, for all $a,b,c \in F$, we have $a(bc)=(ab)c$ and $ab=ba$.
+    \item There is a non-zero element $1\in F$ such that $1a=a$ for all $a\in F$.
+    \item For every non-zero , there is an element  such that .
+    \item Multiplication distributes over addition; that is, for all $a,b,c\in F$, $a(b+c)=ab+ac$.
+\end{itemize}
+\end{definition}
+
+\section{Vector}
+\subsection{The Template Vector Space}
+
+$\mathbb{R}^n=\{<a_1,a_2,\dots, a_n>, a_1, a_2, \dots , a_n \in \mathbb{R}\}$
+
+We can do two main vector operations to vector space over the scalar field $\mathbb{R}$:
+\begin{enumerate}
+    \item Vector addition
+    \item Scalar multiplication
+\end{enumerate}
+
+Notice that $\boldsymbol{w}=<1,-1,0,0>$ is in vector space $\mathbb{R}^4$ not in $\mathbb{R}^2$.
+
+\begin{definition}[$\mathbb{R}^n$]
+
+For a non-negative integer $n$,  $\mathbb{R}^n$ is defined to be the set
+\begin{equation*}
+    \left\{ \left[\begin{array}{c} a_1 \\ a_2 \\ \vdots \\ a_ n \end{array} \right] \  : \  a_1, a_2, \ldots a_ n \in \mathbb R\right\} .
+\end{equation*}
+
+With addition and scalar multiplication as defined previously, $\mathbb{R}^n$ is an example of a vector space over the field $\mathbb{R}$.
+\end{definition}
+
+The vector $\left[\begin{array}{c} 0 \\ 0 \\ \vdots \\ 0 \end{array} \right] \in \mathbb R^ n$ is called the \textbf{zero vector}.
+To distinguish it from the scalar 0, in print we will denote the zero vector by $\boldsymbol{0}$. When handwritten, we will usually write the zero vector as a zero with an arrow over it, like $\vec{0}$. Other letters that represent vectors will not have the arrow notation, however; we will typically use letters like $u,v,w,x$ for vectors, while letters like $a$ or $c$ will represent scalars.
+
+\subsection{Points and Arrows - Geometry of $\mathbb{R}^n$}
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=7cm]{vector geometry.png}
+    \caption{In this figure, we can get $v+w=g, v-w=d, w-v=a, -v=c$}
+    \label{vector geometry}
+\end{figure}
+
+Use Fig.\ref{vector geometry} to exercise geometry of vectors. 
+
+\section{Linear Combinations and Span}
+\subsection{Intro to Linear Combinations}
+
+\begin{definition}[Linear Combination]
+
+    Let $V$ be a vector space over a field $F$. A \textbf{linear combination} of a list of vectors $\{v_1;v_2;\dots; v_n\}$ in $V$ is a vector of the form $a_1v_1+a_2v_2+\dots +a_nv_n$, where the $a_i$ are scalars in $F$.
+\end{definition}
+
+\subsection{Span as a Noun}
+\begin{definition}[Span (n.)]
+
+    Given vectors $v_1, v_2,\dots , v_n$ in a vector space $V$ over a field $F$, we define the \textbf{span} of $\{v_1;v_2;\dots v_n\}$ to be the set of all linear combinations of $v_1, v_2, \dots, v_n$. In other words,
+
+    $\mathrm{Span}\{ v_1; v_2; \ldots v_ n\}  = \{ a_1 v_1 + a_2 v_2 + \ldots + a_ nv_ n : a_ i \in F \} .$
+    The span of the list with no vectors in it is defined to be $\{\boldsymbol{0}\}$.
+
+\end{definition}
+
+\begin{problem}
+    Let $v_1 = \left[\begin{array}{c} 1 \\ 1 \\ 0 \end{array} \right]$, $v_2 = \left[\begin{array}{c} 0 \\ -1 \\ 2 \end{array} \right]$, $v_3 = \left[\begin{array}{c} -1 \\ -2 \\ 3 \end{array} \right]$, and $v_4 = \left[\begin{array}{c} -2 \\ -5 \\ 8 \end{array} \right]$.
+
+    Use row reduction to determine if  is in the span of . Is $w \in \mathrm{Span}\{ v_1; v_2; v_3; v_4 \} $?
+\end{problem}
+
+\begin{proof}[Answer.]
+Yes.
+
+The question is equivalent to asking about the consistency of a system of linear equations given by the following augmented matrix:
+\begin{align*}
+    \left[\begin{array}{cccc:c} 1 &  0 &  -1 &  -2 &  3 \\ 1 &  -1 &  -2 &  -5 &  1 \\ 0 &  2 &  3 &  8 &  3 \end{array} \right]
+\end{align*}
+We will row reduce this matrix. Then we'll see if the row reduced augmented matrix represents a consistent system of equations. If so, then the above augmented matrix also represents a consistent system, and $w$ is in the span of the given set of vectors.
+
+Multiply the 1st row by $-1$, and add this to the 2nd row :
+\begin{align*}
+    \left[\begin{array}{cccc:c} 1 &  0 &  -1 &  -2 &  3 \\ 0 &  -1 &  -1 &  -3 &  -2 \\ 0 &  2 &  3 &  8 &  3 \end{array} \right]
+\end{align*}
+
+Multiply the 2nd row by $2$, and add this to the 3rd row:
+\begin{align*}
+    \left[\begin{array}{cccc:c} 1 &  0 &  -1 &  -2 &  3 \\ 0 &  -1 &  -1 &  -3 &  -2 \\ 0 &  0 &  1 &  2 &  -1 \end{array} \right]
+\end{align*}
+We could stop here. Our matrix now has 3 pivots for its 3 rows. It must represent a consistent system of equations. Here we will continue the process of row reduction, but only for the purpose of elucidating our claim.
+Add the 3rd row to the 2nd row:
+\begin{align*}
+    \left[\begin{array}{cccc:c} 1 &  0 &  -1 &  -2 &  3 \\ 0 &  -1 &  0 &  -1 &  -3 \\ 0 &  0 &  1 &  2 &  -1 \end{array} \right]
+\end{align*}
+
+Add the 3rd row to the 1st row:
+\begin{align*}
+    \left[\begin{array}{cccc:c} 1 &  0 &  0 &  0 &  2 \\ 0 &  -1 &  0 &  -1 &  -3 \\ 0 &  0 &  1 &  2 &  -1 \end{array} \right]
+\end{align*}
+
+For good measure, multiply the 2nd row by $-1$:
+
+\begin{align*}
+    \left[\begin{array}{cccc:c} 1 &  0 &  0 &  0 &  2 \\ 0 &  1 &  0 &  1 &  3 \\ 0 &  0 &  1 &  2 &  -1 \end{array} \right]
+\end{align*}
+
+The above is consistent, as there is no row of all zeros followed by a non-zero in the right column. Therefore, $w$ is in the span of the given set of vectors.
+\end{proof}
+
+\subsection{Span as a Verb}
+\begin{definition}[Span (v.)]
+
+    Given vectors $v_1, v_2, \dots, v_n$ in a vector space $V$ over a field $F$, we say that the list $\{v_1;v_2;\dots ; v_n\}$ \textbf{spans} $V$ if the span of the list of vectors is all of $V$.
+\end{definition}
+
+
+If $\{v_1;v_2;\dots, v_n\}$ is a list of vectors in $\mathbb{R}^m$, the list spans $\mathbb{R}^m$ if and only if the matrix
+\begin{align*}
+A = \left[ \begin{array}{cccc} | &  | & &  | \\ v_1 &  v_2 &  \cdots &  v_ n \\ | &  | & &  | \end{array} \right]
+\end{align*}
+row reduces to have a pivot in every row.
+
+If $n<m$, then it is impossible for the list $\{v_1;v_2;\dots; v_n\}$ to span $\mathbb{R}^m$.
+
+Notice: Not every list of two non-zero vectors in $\mathbb{R}^2$ span $\mathbb{R}^2$.
+If the two vectors are scalar multiples of each other, then they lie along the same line, and their span cannot include anything off that line. For instance, in the following picture, $w$ is not a linear combination of $v_1$ and $v_2$, so $w$ is not in the span of $\{v_1;v_2\}$ – the list does not span all of $\mathbb{R}^2$.
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=7cm]{spanning notice.png}
+    \caption{You see, when $v_1$ and $v_2$ parallel to each other, the list does not span all of $\mathbb{R}^2$}
+    \label{fig:spanning notice}
+\end{figure}
+\newpage
+
+\section{Matrix-Vector Multiplication}
+\subsection{Defining Matrix-Vector Multiplication}
+If $A$ is an $m\times n$ matrix
+\begin{align*}
+    A = \left[ \begin{array}{cccc} | &  | & &  | \\ v_1 &  v_2 &  \cdots &  v_ n \\ | &  | & &  | \end{array} \right],
+\end{align*}
+and $x$ is the vector $x = \left[\begin{array}{c} a_1 \\ a_2 \\ \vdots \\ a_ n \end{array} \right]$, then the product $Ax$ is defined to be 
+\begin{align*}
+    Ax = a_1 v_1 + a_2 v_2 + \ldots + a_ n v_ n
+\end{align*}
+and the resulting product $Ax$ will be an element of space $\mathbb{R}^m$.
+\subsection{Matrix-Vector Equations}
+\begin{problem}
+How will we solve this equation?
+
+$A = \left[ \begin{array}{cccc} 1 &  2 & 0& 3 \\ 0 &  0 &  2 &  4 \\ 2 &  4 &-3 &  0 \end{array} \right]
+$ and $Ax=\left[\begin{array}{c} 2 \\ 4 \\ -2 \end{array} \right]$ and try to solve $x$.
+\end{problem}
+
+\begin{proof}[Answer.]
+Suppose $x=\left[\begin{array}{c} a_1 \\ a_2 \\ a_3 \\ a_4 \end{array} \right]\in \mathbb{R}^4$, 
+    \begin{align*}
+    a_1\left[ \begin{array}{c} 1\\ 0\\ 2\end{array}\right]+a_2\left[ \begin{array}{c} 2\\ 0\\ 4\end{array}\right]+a_3\left[ \begin{array}{c} 0\\ 2\\ -3\end{array}\right]+a_4\left[ \begin{array}{c} 3\\ 4\\ 0\end{array}\right]=\left[ \begin{array}{c} 2\\ 4\\ -2\end{array}\right]
+    \end{align*}
+\end{proof}
+
+\begin{problem}
+Is $v$ a linear combination of the columns of $A$?
+\end{problem}
+\begin{align*}
+    \left[\begin{array}{cccc:c} 1 &  2 &  0 &  3 &  2 \\ 0 &  0 &  2 &  4 &  4 \\ 2 &  4 &  -3 &  0 &  -2 \end{array} \right]
+\rightarrow
+    \left[\begin{array}{cccc:c} 1 &  2 &  0 &  3 &  2 \\ 0 &  0 &  1&  2 &  2 \\ 0 &  0 &  0 &  0 &  0 \end{array} \right]
+\end{align*}
+
+So $Ax=\left[\begin{array}{c} 2\\4\\-2 \end{array} \right]$ has infinitely many solutions.
+
+
+Notice:
+When will a matrix vector multiplication be consistent?
+
+
+\begin{problem}
+Let $A$ be a $4\times 3$ matrix. There is a specific vector $v$ for which you can conclude the equation $Ax=v$ has a solution, even without knowing anything else about $A$. What is this vector $v$?
+
+\end{problem}
+\begin{proof}[Answer]
+$<0,0,0,0>$ or $\left[\begin{array}{c} 0\\0\\0\\0 \end{array} \right]$ (which is very complicated as you see, so I will use $<0,0,0,0>$ for vectors sometimes).
+\end{proof}
+
+Explanation:
+
+The equation $Ax=\boldsymbol{0}$ always has at least one solution, namely $x=\boldsymbol{0}$. Since $A$ has 4 rows, $v$ is the zero vector in $\mathbb{R}^4$ specifically.
+
+
+\subsection{Solution Sets to Matrix-Vector Equations}
+\begin{problem}
+Find solution to $Ax=\boldsymbol{0}$:
+\begin{align*}
+    A=\left[\begin{array}{ccc} 2 &  4 &  -2  \\ 0 &  0 &  0 \\ -1 &  -2 &  1
+\end{array} \right]
+\end{align*}
+\end{problem}
+\begin{Answer}
+
+\begin{align*}\left[\begin{array}{ccc:c} 2 &  4 &  -2 &0 \\ 0 &  0 &  0 &0\\ -1 &  -2 &  1&0
+\end{array} \right]
+\rightarrow
+\left[\begin{array}{ccc:c} 1 &  2 &  -1 & 0  \\ 0 &  0 &  0 &0\\ 0 &  0&0 &  0
+\end{array} \right]
+\end{align*}
+So $a_1+2a_2-a_3=0$, so $a_1=-2a_2+a_3$.
+And the solution set is $\left\{ a_2\left[\begin{array}{c} -2 \\ 1 \\ 0 \end{array} \right]+ a_3\left[\begin{array}{c} 1 \\ 0 \\ 1 \end{array} \right]; a_2,a_3\in \mathbb{R}\right\}$.
+\end{Answer}
+
+Non-trivial Solutions:
+
+\begin{problem}
+    Let $A$ be a $6\times 4$ matrix. The equation $Ax=\boldsymbol{0}$ has the solution $x=\boldsymbol{0}$, which we call the \textbf{trivial solution}. If there are no solutions other than the trivial solution, how many pivots must $A$ have when row-reduced?
+\end{problem}
+
+\begin{proof}[Answer.] 4
+The vector $\boldsymbol{x}$ lives in $\mathbb{R}^4$, so there are four variables in this equation. If the trivial solution is the unique solution, then we cannot have free variables when the augmented matrix $\left[ \begin{array}{c:c} A &  \mathbf{0}\end{array} \right]$ is row-reduced. That means $A$ will have a pivot in each of its four columns.
+\end{proof}
+
+\begin{problem}
+Let
+\begin{align*}
+    A = \left[ \begin{array}{cccc} 1 &  1 &  0 &  -1\\ 5 &  6 &  -1 &  1 \end{array} \right].
+\end{align*}
+
+Find a list of vectors whose span is the set of solutions to $Ax=\boldsymbol{0}$.
+\end{problem}
+\begin{proof}[Answer]
+Because $Ax=\boldsymbol{0}$, 
+\begin{align*}
+    \left[ \begin{array}{cccc:c} 1 &  1 &  0 &  -1&0\\ 5 &  6 &  -1 &  1 &0\end{array} \right].
+\end{align*}
+After row reducing:
+\begin{align*}
+    \left[ \begin{array}{cccc:c} 1 &  1 &  0 &  -1&0\\ 0 &  1 &  -1 &  6 &0 \end{array} \right]
+\rightarrow
+\left[ \begin{array}{cccc:c} 1 &  0 &  1 &  -7 &0\\ 0 &  1 &  -1 &  6 &0 \end{array} \right].
+\end{align*}
+
+So $a_1+a_3-7a_4=0, a_2-a_3+6a_4=0$, the vector $\left[\begin{array}{c} a_1\\a_2\\a_3\\a_4 \end{array} \right]$ is $\left[\begin{array}{c} -a_3+7a_4\\a_3-6a_4\\a_3\\a_4 \end{array} \right]=\left[\begin{array}{c} -1\\1\\1\\0 \end{array} \right]a_3+\left[\begin{array}{c} 7\\-6\\0\\1 \end{array} \right]a_4$, for any $a_3,a_4\in \mathbb{R}$, the set of solution is $<-1,1,1,0>;<7,-6,0,1>$.
+\end{proof}
+Notice: 
+If $S$ is the solution set to $Ax=\boldsymbol{0}$, then the solution set to $Ax=v$ must be a translation of $S$.
+
+False. If the solution set to $Ax=v$ is empty (i.e. if $v$ is not a linear combination of the columns of $A$), then it can't be a translation of $S$, which is sure to contain at least one solution (the zero vector).
+
+If $Ax=v$ is consistent, then the solution set will be a translation of $S$.
+
+\begin{proposition}
+    
+    If $Ax=v$ is consistent, then the solution set will be a translation of $S$.
+\end{proposition}
+
+
+\begin{proof}[Proof.]
+
+Let $S$ be the solution set to $Ax=\boldsymbol{0}$, and suppose that $Ax=v$ is consistent. Then there is some solution $x=x_0$. We claim that the solution set to $Ax=v$ is exactly $x_0+S$.
+
+First we show that every vector in the translation $x_0+S$ is a solution to $Ax=v$. Let $w\in x_0+S$. Then $w=x_0+y$ for some $y\in S$, so
+\begin{align*}
+    Aw=A(x_0+y)=Ax_0+Ay
+\end{align*}
+We know that  and, since , we also know that . Hence , so  is a solution to 
+
+Now we show that every solution to $Ax=v$ is an element of $x_0+S$. Indeed, suppose that $w$ satisfies $Aw=v$, and consider the vector $y=w-x_0$. We have
+\begin{align*}
+    Ay=A(w-x_0)=Aw-Ax_0=v-v=\boldsymbol{0}.
+\end{align*}
+
+Hence $y\in S$. Therefore $w=x_0+y\in x_0+S$. This proves the proposition.
+\end{proof}
+\subsection{Multiplication Properties}
+For any $m\times n$ matrix $A$, vectors $w,x\in \mathbb{R}^n$, and scalar $a$, we have that
+\begin{align*}
+    A(w+x)=Aw+Ax
+\end{align*}
+and
+\begin{align*}
+    A(ax)=a(Ax).
+\end{align*}
+
+\section{Linear Independence}
+
+Intro:
+Is $\{v_1;v_2;\dots ;v_n\}\in \mathbb{R}^m$ linear independent?
+$$\Updownarrow$$ 
+Does $a_1v_1+a_2v_2+\dots +a_nv_n=\boldsymbol{0}$ imply $a_1=a_2=\dots =a_n=0$?
+$$\Updownarrow$$ 
+Does $\left[ \begin{array}{cccc} | &  | & &  | \\ v_1 &  v_2 &  \cdots &  v_ n \\ | &  | & &  | \end{array} \right]x=\boldsymbol{0}$ have only the trivial solution ($x=\boldsymbol{0}$)?
+$$\Updownarrow$$
+Does $\left[ \begin{array}{cccc:c} | &  | & &  | &0\\ v_1 &  v_2 &  \cdots &  v_ n & 0\\ | &  | & &  | &0\end{array} \right]$ Row Reduce (RR) to have no free variables ( pivot in every column)? (If $m\times n, n>m$, must have free variables.)
+
+
+Definition. We say that a list of vectors $\{v_1;v_2;\dots ; v_n\}$ in a vector space $V$ is \textbf{linearly independent} if the only way to pick scalars $a_1,a_2,\dots , a_n$ such that $a_1v_1+a_2v_2+\dots +a_nv_n=\boldsymbol{0}$ is if $a_1=a_2=\dots =a_n=0$.
+
+Definition. A list of vectors $\{v_1;v_2;\dots ; v_n\}$ in a vector space $V$ is \textbf{linearly dependent} if there are scalars $a_1,a_2,\dots , a_n$, not all zero, such that $a_1v_1+a_2v_2+\dots +a_nv_n=\boldsymbol{0}$.
+
+\subsection{Geometry of Linear Independence (for Small Sets)}
+
+If $v_1=\boldsymbol{0}$, $a_1v_1=\boldsymbol{0}$ for any $a_1$, linear dependent.
+If $v_1\neq \boldsymbol{0}$, $a_1v_1=\boldsymbol{0}$ only if $a_1=0$, linear independent.
+
+
+For a list of vector $\{v_1;v_2\}$ in a vector space $V$ where $v_i\neq \boldsymbol{0}$. $a_1v_1+a_2v_2=\boldsymbol{0}$?
+
+If $v_1, v_2$ not collinear, then $\{v_1,v_2\}$ linear independent;
+
+If $v_1, v_2$ collinear, then $\{v_1,v_2\}$ linear dependent.
+
+
+\begin{problem}
+    Consider the vectors $v_1, v_2, v_3\in \mathbb{R}^2$ as given in this picture:
+    \begin{figure}[h]
+        \centering
+        \includegraphics[width=5cm]{geometry of linear independence.png}
+
+        \label{Geometry of Linear Independence}
+    \end{figure}
+
+    Which of the following lists are linearly independent among $$\{\boldsymbol{0}\}, \{v_1\}, \{v_1;v_2\}, \{v_1;v_3\}, \{v_2;v_3\}, \{v_3, v_3\}, \{v_1,v_2, v_3\}$$?
+\end{problem}
+\begin{proof}[Answer]
+Ans: $\{v_1\},\{v_1;v_2\},\{v_1;v_3\}$. (Notice that for $\{v_1;v_2;v_3\}$ $a_1$ could be 0 while others are not so linear dependent.)
+\end{proof}
+
+\begin{proposition}
+
+Let $\{v_1;v_2;\dots ; v_n\}$ be vectors in a vector space $V$. The list is linearly dependent if and only if one of the vectors in the list can be expressed as a linear combination of the other vectors.
+\end{proposition}
+\begin{proof}
+Suppose $\{v_1;v_2;\dots ; v_n\}$ is linear dependent, $a_1v_1+\dots +a_nv_n=\boldsymbol{0}$, not all $a_i=0$.
+
+Suppose $a_1\neq 0$, 
+\begin{align*}
+    a_1v_1&=-a_2v_2-\dots -a_nv_n\\
+    v_1&=-\frac{a_2}{a_1}v_2-\dots -\frac{a_n}{a_1}v_n
+\end{align*}
+
+Because $v_1$ can be written in linear combination of other factors, $v_1\in \mathrm{Span}\{v_2, \dots , v_n\}$.
+\end{proof}
+
+\textbf{Linear independence} of a list of vectors is an \textbf{uniqueness} question and \textbf{linear dependence} of a list of vectors is an \textbf{existence} question.
+
+A list of vectors is linearly independent if the \textbf{only} way to write $\boldsymbol{0}$ as a linear combination of the list is when all coefficients are zero. This is a uniqueness statement.
+
+\subsection{Exercise: Determine Linear Independence in $\mathbb{R}^m$}
+
+Use row reduction to determine how many solutions the equation $Ax=\boldsymbol{0}$ has, where
+\begin{align*}
+    A = \left[\begin{array}{ccc} 1 &  2 &  3 \\ -1 &  1 &  3 \\ 3 &  3 &  3 \\ 4 &  1 &  -2 \\ 5 &  3 &  1 \end{array} \right].
+\end{align*}
+And is the list $\{v_1;v_2;v_3\}$ linearly independent, where the $v_i$ are given below?
+\begin{align*}
+    v_1 = \left[\begin{array}{c} 1 \\ -1 \\ 3 \\ 4 \\ 5 \end{array} \right], v_2 = \left[\begin{array}{c} 2 \\ 1 \\ 3 \\ 1 \\ 3 \end{array} \right], v_3 = \left[\begin{array}{c} 3 \\ 3 \\ 3 \\ -2 \\ 1 \end{array} \right].
+\end{align*}
+
+
+
+Ans: Infinitely many solutions and Linearly dependent.
+
+First, we recall that there must always exist at least one solution to $Ax=\boldsymbol{0}$. We will either have exactly one solution (and that solution will be $\boldsymbol{0}$), or we will have infinitely many solutions.
+
+After row reduction, we obtain $\left[\begin{array}{ccc} 1 &  0 &  -1 \\ 0 &  1 &  2 \\ 0 &  0 &  0 \\ 0 &  0 &  0 \\ 0 &  0 &  0 \end{array} \right].$
+
+We have only two pivots. The third column represents a \textbf{free variable}, so the equation has infinitely many solutions. Note that, in the product $Ax$, the columns of the matrix $A$ are vectors that are combined with the entries of $x$ as the weights: $Ax=a_1v_1+a_2v_2+a_3v_3$. We have therefore shown that there are infinitely many sets of coefficients $\{a_1;a_2;a_3\}$ that satisfy $a_1v_1+a_2v_2+a_3v_3=\boldsymbol{0}$, therefore the list $\{v_1;v_2;v_3\}$ is linearly dependent.
+
+\subsection{Linear Independent List in $\mathbb{R}^m$}
+
+From what we just got, we can get a proposition below.
+\begin{proposition}
+
+    If $A$ is an $m\times n$ matrix with columns $v_1.v_2,\dots , v_n \in \mathbb{R}^m$, then the list $\{v_1;v_2;\dots ; v_n\}$ is linearly independent if and only if $A$ does not have a free variable.
+
+If $n>m$, then any list of $n$ vectors in $\mathbb{R}^m$ must be linearly dependent.
+\end{proposition}
+This is a nice chart
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=7cm]{a nice chart.png}
+    \caption{about Linear Independence and Spanning}
+    \label{fig:my_label}
+\end{figure}
+
+\section{Linear Transformation}
+Function $T$ from a vector space $V$ to a vector space $W$.
+$$T: V\rightarrow W$$
+\subsection{Defining Linear Transformation}
+
+$T: V\rightarrow W$ is a \textbf{linear transformation} if 
+\begin{enumerate}
+    \item For $u,v\in V$, $T(u+v)=T(u)+T(v)$ (scalar addition).
+    \item For $v\in V, a\in F$, $T(av)=aT(v)$ (scalar multiplication).
+\end{enumerate}
+
+Informally, if $T$ satisfies the first condition we say that “$T$ respects vector addition," and if $T$ satisfies the second condition we say that “$T$ respects scalar multiplication."
+
+\subsection{Linear Transformation Properties}
+
+Suppose $T: V\rightarrow W$ is linear transformation.
+
+
+Claim: $T(\boldsymbol{0})=\boldsymbol{0}$
+
+Proof: 
+
+$T(\boldsymbol{0})=T(\boldsymbol{0}+\boldsymbol{0})=T(\boldsymbol{0})+T(\boldsymbol{0})$, $\boldsymbol{0}=T(\boldsymbol{0})$.
+
+$T(a_1v_1+\dots +a_nv_n)=T(a_1v_1)+\dots +T(a_nv_n)=a_1T(v_1)+\dots +a_nT(v_n)$
+
+
+
+EX using this property:
+
+Suppose $T=\mathbb{P}\rightarrow \mathbb{R}^2$ is a linear transformation. Let $f,g\in \mathbb{P}$ be the polynomials given by $f(t)=t^2$ and $g(t)=t$.
+
+Suppose that $T(f)=\left[\begin{array}{c} 1 \\ 2 \end{array} \right]$ and $T(g) = \left[\begin{array}{c} 2 \\ -1 \end{array} \right]$.
+
+If $j\in \mathbb{P}$ is the polynomial given by $j(t)=3t^2-t$, what must $T(j)$ be?
+
+$T(j)=T(3t^2-t)=T(3f-g)=3T(f)-T(g)=T(f)=3\left[\begin{array}{c} 1 \\ 2 \end{array} \right]-\left[\begin{array}{c} 2 \\ -1 \end{array} \right]=\left[\begin{array}{c} 1 \\ 7 \end{array} \right]$.
+
+\section{Linear Transformations in $\mathbb{R}^n$}
+\subsection{Multiplication by a Matrix in General}
+Linear Transformation. $T(x)=Ax, A=\left[\begin{array}{cc} -1 & -1\\-3 & 1 \end{array} \right]$.
+
+$T(\left[\begin{array}{c} 1\\0 \end{array} \right])=A\cdot e_1=\left[\begin{array}{c} -1\\-3 \end{array} \right]$.
+
+$T(\left[\begin{array}{c} 0\\1 \end{array} \right])=A\cdot e_2=\left[\begin{array}{c} -1\\1 \end{array} \right]$.
+
+Which is just the $T(x)$ projectile to $T(e_1)$ and $T(e_2)$.
+
+
+\subsection{The Standard Matrix for a Linear Transformation}
+
+Proposition/Definition. If $T: \mathbb{R}^n\rightarrow \mathbb{R}^m$ is a linear transformation, then there is a unique $m\times n$ matrix $A$ such that $T(x)=Ax$ for all $x\in \mathbb{R}^n$. This matrix $A$ is called the \textbf{standard matrix} for $T$, and must be given by the formula
+
+\begin{align*}
+    A = \left[ \begin{array}{cccc} | &  | & &  | \\ T(e_1) &  T(e_2) &  \cdots &  T(e_ n) \\ | &  | & &  | \end{array} \right],
+\end{align*}
+where $e_i\in \mathbb{R}^n$ is the vector whose $i$th entry equals 1, and all of whose other entries are 0.
+
+Form of Standard matrix:
+\begin{problem}
+    For all $v\in \mathbb{R}^2$, let  be the reflection of $v$ across the horizontal axis of $\mathbb{R}^2$.  is a linear transformation from $\mathbb{R}^2$ to $\mathbb{R}^2$. What is its standard matrix?
+\end{problem}
+
+\begin{proof}[Answer.]
+$\left[ \begin{array}{cc} 1&  0 \\ 0 &  -1 \end{array} \right]$ ([[1,0],[0,-1]])
+
+If $T$ is a reflection across the horizontal axis, then $e_1$ is fixed by $T$ and thus the first column of the standard matrix is $T(e_1)=e_1$. Now, $e_2$ is reflected to $-e_2$, and thus the second column of the standard matrix is $T(e_2)=-e_2$. So the answer is $\left[ \begin{array}{cc} 1&  0 \\ 0 &  -1 \end{array} \right].$
+\end{proof}
+\subsection{The Identity Matrix}
+\begin{definition}[Identity Matrix]
+
+The standard matrix for the identity transformation $T:\mathbb{R}^n\rightarrow \mathbb{R}^n$ is denoted by the symbol $I_n$ and is called the $n\times n$ \textbf{identity matrix}. Often we simply use $I$ to denote the identity matrix when the $n$ is understood.
+\begin{align*}
+    I_ n = \left[ \begin{array}{cccc} | &  | & &  | \\ e_1 &  e_2 &  \cdots &  e_ n \\ | &  | & &  | \end{array} \right] = \left[\begin{array}{cccc} 1 &  0 & \cdots &  0 \\ 0 &  1 &  \cdots 0 \\ \vdots &  \vdots &  \ddots &  \vdots \\ 0 &  0 &  \cdots &  1 \end{array} \right].
+\end{align*}
+\end{definition}
+
+Since $I_n$ is the standard matrix for the identity transformation $T$, we have $I_nv=T(v)=v$ for all $v\in \mathbb{R}^n$.
+
+\subsection{Some Geometry Properties}
+
+Which properties seem to be preserved by linear transformations from $\mathbb{R}^2$ to $\mathbb{R}^2$?
+\begin{enumerate}
+    \item The area of regions does not preserve.
+    \item The lines that start parallel always go in the same direction after transformation.
+    \item The lines that start perpendicular does not go in the same direction after transformation.
+\end{enumerate}
+
+
+\section{Into and Onto}
+
+\subsection{Image Definition}
+\begin{definition}[Image]
+
+Given a linear transformation $T: V\rightarrow W$, the \textbf{image} of $T$ is the set
+\begin{align*}
+    \mathrm{Image}(T) = \left\{  T(v) \  : \  v \in V\right\} .
+\end{align*}
+\end{definition}
+
+\begin{proposition}
+
+    If $T: \mathbb{R}^n\rightarrow \mathbb{R}^m$ is a linear transformation with standard matrix $A$, then the image of $T$ is the span of the columns of $A$. (This is sometimes also called the column space of $A$.)
+\end{proposition}
+
+
+\subsection{Onto}
+Definition. A linear transformation $T:V\rightarrow W$ is called \textbf{onto} if $\mathrm{Image}(T)=W$.
+
+
+
+If every $w$ is $T$ of something, $T:V\rightarrow W$ is ONTO.
+
+$T: \mathbb{R}^n\rightarrow \mathbb{R}^m$ with standard matrix $A$.
+
+$\mathrm{Image}(T) = \mathrm{Span}$ of column of $A$.
+
+So, $T$ is onto $\Leftrightarrow$ column of $A$ span $\mathbb{R}^m$
+
+Note: this is impossible if $n<m$ for $\mathbb{R}^n\rightarrow \mathbb{R}^m$ to be onto.
+
+
+EX:
+Let $T:\mathbb{R}^3\rightarrow \mathbb{R}^3$ be the linear transformation with standard matrix
+
+\begin{align*}
+    A = \left[\begin{array}{ccc} 1 &  2 &  3 \\ 0 &  1 &  1 \\ -1 &  4 &  3 \end{array} \right].
+\end{align*}
+
+(This is the same $T$ as in previous problems; you may wish to review them.)
+
+Is $T$ onto?
+
+No. If $T$ is onto, then every vector in $\mathbb{R}^3$ is in the image of $T$, but recall that we found that the vector $\left[\begin{array}{c} 2 \\ -1 \\ 0 \end{array} \right]$ is not in the image of $T$.
+
+
+Notice: $T$ is onto if and only if the system $Ax=v$ is consistent for all $v\in \mathbb{R}^m$. This is true if and only if $A$ row reduces to a matrix with no rows of all zeros.
+
+\subsection{Into}
+For the INTO, we say that if element in $W$ is 
+\begin{itemize}
+    \item hit once
+    \item hit no times 
+\end{itemize}
+they are okay but the elements can only be hit no more than 1. So if INTO, it means that $u,v\in V, u\neq v$, then $T(u)\neq T(v)$.
+
+\begin{definition}[Into]
+
+    A linear transformation $T:V\rightarrow W$, is \textbf{into} if, for every $u,v\in V$ with $u\neq v$, we have $T(u)\neq T(v)$.
+\end{definition}
+
+
+\subsection{Kernel of a Linear Transformation}
+\begin{definition}[Kernel]
+
+Given a linear transformation $T: V\rightarrow W$, the \textbf{kernel} of $T$ is the set 
+\begin{align*}
+    \mathrm{Ker}(T)=\{v\in V; T(v)=\boldsymbol{0}\}
+\end{align*}
+\end{definition}
+
+\begin{proposition}
+
+$T$ is into $\Leftrightarrow$ $\mathrm{Ker}(T)=\{\boldsymbol{0}\}$
+\end{proposition}
+
+\begin{proof}
+1st proof $T$ is into $\Rightarrow$ $\mathrm{Ker}(T)=\{\boldsymbol{0}\}$
+Suppose $T$ is into. Take $v\neq \boldsymbol{0}$, then $T(v)\neq T(\boldsymbol{0})=\boldsymbol{0}$, $v\notin \mathrm{Ker}(T)$, so $\mathrm{Ker}(T)=\{\boldsymbol{0}\}$
+
+Then proof $\mathrm{Ker}(T)=\{\boldsymbol{0}\}\Rightarrow T$ is into.
+Suppose $\mathrm{Ker}(T)=\{\boldsymbol{0}\}$, if $u,v \in V$ with $T(u)=T(v)$, then $T(u)-T(v)=\boldsymbol{0}$, $T(u-v)=\boldsymbol{0}$, $u-v\in \mathrm{Ker}(T)$.
+\end{proof}
+
+\begin{problem}
+Let $T:\mathbb{R}^3\rightarrow \mathbb{R}^4$ be the linear transformation with standard matrix
+\begin{align*}
+    A = \left[\begin{array}{ccc} 1 &  2 &  5 \\ 0 &  1 &  2 \\ -1 &  1 &  1 \\ 2 &  -1 &  0 \end{array} \right].
+\end{align*}
+
+How many solutions does the equation $Ax=\boldsymbol{0}$ have?
+
+Does $\mathrm{Ker}(T)=\{\boldsymbol{0}\}$
+
+Is $T$ into?
+\end{problem}
+\begin{proof}[Answer.]
+Matrix $A$ row reduces to
+\begin{align*}
+    \left[\begin{array}{ccc} 1 &  0 &  1 \\ 0 &  1 &  2 \\ 0& 0& 0 \\ 0& 0& 0 \end{array} \right].
+\end{align*}
+Thus, when augmented with the zero vector, there are infinitely many solutions. This also tells us that $\boldsymbol{0}$ is not the only solution to $Ax=\boldsymbol{0}$, and thus $\mathrm{Ker}(T)\neq \{\boldsymbol{0}\}$. Since $T$ sends multiple vectors to $\boldsymbol{0}$, $T$ does not satisfy the definition of into.
+\end{proof}
+
+Let $T: \mathbb{R}^n\rightarrow \mathbb{R}^m$ be a linear transformation with standard matrix $A$. $T$ is into if and only if $A$ row reduces to have no free variables.
+
+Suppose that $T$ has standard matrix $A$. $T$ is into if and only if there is a unique solution (in particular $\boldsymbol{0}$) to $Ax=\boldsymbol{0}$. This is true if and only if $A$ does not have any free variables when row reduced.
+
+\begin{figure}[h]
+    \centering
+    \includegraphics[width=10cm]{chart of onto and into.png}
+    \caption{This chart gives people the relationship between onto, into and others}
+    \label{fig:chart onto into}
+\end{figure}
+\chapter{Matrix Operation}
+\section{Matrix Multiplication}
+
+
+
+
+\pagebreak
+
+\medskip
+
+\printbibliography[heading=bibintoc,title={\centering Bibliography}]
+
+\end{document}
